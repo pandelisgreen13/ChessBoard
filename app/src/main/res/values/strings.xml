@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Chess</string>
+    <string name="splash_max_moves">Max Moves</string>
+    <string name="splash_boardSize">BoardSize</string>
+    <string name="splash_start_text">Start</string>
+    <string name="error_not_reached">End position is not reachable for the knight</string>
+    <string name="error_steps">The knight can not reach end position in %1$d moves</string>
+
+</resources>

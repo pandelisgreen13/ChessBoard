@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="SplashTitle">
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/splash_text_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SplashEditText">
+        <item name="android:textAlignment">center</item>
+        <item name="android:background">@color/brown_light</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/splash_text_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:digits">0123456789</item>
+        <item name="android:inputType">number</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:padding">5dp</item>
+    </style>
+
+</resources>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/brown">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/knightImageView"
+        android:layout_width="@dimen/splash_image_width"
+        android:layout_height="@dimen/splash_image_height"
+        android:backgroundTint="@color/white"
+        android:src="@drawable/ic_knight"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/movesTextView"
+        style="@style/SplashTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/splash_image_margin_bottom"
+        android:text="@string/splash_max_moves"
+        app:layout_constraintEnd_toEndOf="@+id/moveEditText"
+        app:layout_constraintStart_toStartOf="@+id/moveEditText"
+        app:layout_constraintTop_toBottomOf="@+id/knightImageView" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/moveEditText"
+        style="@style/SplashEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/common_twenty_dp"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toStartOf="@+id/verticalGuideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/movesTextView"
+        tools:text="2" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/boardTextView"
+        style="@style/SplashTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/splash_image_margin_bottom"
+        android:text="@string/splash_boardSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/verticalGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/knightImageView" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/boardSizeEditText"
+        style="@style/SplashEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/common_twenty_dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/verticalGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/boardTextView"
+        tools:text="2" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verticalGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/startButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_twenty_dp"
+        android:backgroundTint="@color/orange"
+        android:text="@string/splash_start_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/moveEditText" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
