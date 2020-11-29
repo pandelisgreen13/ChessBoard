@@ -47,7 +47,7 @@ class HomePresenterImpl(private val homeView: HomeView,
         }
     }
 
-    override fun calculateTile(positionTile: Position) {
+    override fun calculateTile(piecePosition: Position?, positionTile: Position) {
         if (!isViewAttached()) {
             return
         }

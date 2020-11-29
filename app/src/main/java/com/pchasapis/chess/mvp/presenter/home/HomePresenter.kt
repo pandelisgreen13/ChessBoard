@@ -4,7 +4,7 @@ import com.pchasapis.chess.model.Position
 
 interface HomePresenter {
     fun setBoard()
-    fun calculateTile(positionTile: Position)
+    fun calculateTile(piecePosition: Position?, positionTile: Position)
     fun clearChess()
-    fun getBoardSize(): Int
+    fun getBoardSize():Int
 }

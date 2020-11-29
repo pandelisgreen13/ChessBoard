@@ -67,8 +67,8 @@ class HomeActivity : AppCompatActivity(), HomeView {
         }
 
         binding.chessView.setBoardListener(object : BoardListener {
-            override fun onTileClicked(positionTile: Position) {
-                presenter.calculateTile(positionTile)
+            override fun onTileClicked(piecePosition: Position?, positionTile: Position) {
+                presenter.calculateTile(piecePosition, positionTile)
             }
         })
     }
