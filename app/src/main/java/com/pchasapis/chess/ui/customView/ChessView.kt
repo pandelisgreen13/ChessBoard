@@ -24,14 +24,8 @@ class ChessView : GridLayout {
      */
     private var lightTile: Drawable? = null
     private var darkTile: Drawable? = null
-    private var lastSelectedPiece: View? = null
-    private var currentPieceSelected: View? = null
     private var dimension: Int? = null
-
-    /**
-     * Markedtiles for the last selected piece.
-     */
-    private var markedTiles: MutableList<View>
+    private var dimm = -1
 
     /**
      * Marking tile animation.
@@ -41,26 +35,20 @@ class ChessView : GridLayout {
     /**
      * Piece's moviment anim duration.
      */
-    private var aniMovDur = 500
     private val animMovListDur = 2000
 
     /**
      * Listener.
      */
     private var boardListener: BoardListener? = null
-    private var dimm = -1
-    private var alreadyCreated = false
-    private var pieceQueues: MutableList<PieceQueue> = ArrayList()
 
     constructor(context: Context?) : super(context) {
         piecesMatrix =
             Array(getBoardDimension()) { arrayOfNulls(getBoardDimension()) }
-        markedTiles = ArrayList()
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
         piecesMatrix = Array(getBoardDimension()) { arrayOfNulls(getBoardDimension()) }
-        markedTiles = ArrayList()
         initAttributes(context, attrs)
     }
 
@@ -70,7 +58,6 @@ class ChessView : GridLayout {
         defStyleAttr
     ) {
         piecesMatrix = Array(getBoardDimension()) { arrayOfNulls(getBoardDimension()) }
-        markedTiles = ArrayList()
         initAttributes(context, attrs)
     }
 
@@ -83,13 +70,6 @@ class ChessView : GridLayout {
             MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY)
         )
         dimm = parentWidth
-        if (!alreadyCreated) {
-            createBoard(parentWidth)
-            for (pieceQueue in pieceQueues) {
-                setPiece(pieceQueue.position.i, pieceQueue.position.j, pieceQueue.imageId)
-            }
-            alreadyCreated = true
-        }
     }
 
     private fun initAttributes(context: Context, attrs: AttributeSet) {
@@ -108,15 +88,8 @@ class ChessView : GridLayout {
 
         val arrayOfNulls: Array<View?> = arrayOfNulls(getBoardDimension())
         piecesMatrix = Array(getBoardDimension()) { arrayOfNulls }
-        markedTiles = ArrayList()
     }
-
-    private fun createBoard(dimm: Int) {
-        this.rowCount = getBoardDimension()
-        this.columnCount = getBoardDimension()
-        setBoardBackground(dimm)
-    }
-
+    
     fun removePiece(i: Int, j: Int) {
         require(isPosValid(i, j)) { "Invalid position: [$i;$j]." }
         for (i in piecesMatrix.indices) {
@@ -134,8 +107,6 @@ class ChessView : GridLayout {
         this.dimension = dimension
         val arrayOfNulls: Array<View?> = arrayOfNulls(dimension)
         piecesMatrix = Array(dimension) { arrayOfNulls }
-        alreadyCreated = false
-        pieceQueues = ArrayList()
         requestLayout()
     }
 
@@ -159,17 +130,8 @@ class ChessView : GridLayout {
      * @param j position coord j.
      */
     fun setPiece(i: Int, j: Int, imageid: Int, pieceId: Int = 0) {
-        if (dimm == -1) {
-            pieceQueues.add(PieceQueue(Position(i, j), imageid))
-            return
-        }
         val view: View = createPiece(imageid, pieceId)
         require(isPosValid(i, j)) { "Invalid position: [$i;$j]." }
-//        when (pieceId) {
-//            100 -> piecesMatrix[0][0] = view
-//            200 -> piecesMatrix[1][1] = view
-//            else ->
-//        }
         piecesMatrix[i][j] = view
         addViewToGrid(view, i, j)
     }
@@ -212,27 +174,6 @@ class ChessView : GridLayout {
     }
 
     /**
-     * Get piece position[
-     *
-     * @param piece piece being searched.
-     * @return Pos instance.
-     */
-    private fun getPiecePos(piece: View?): Position? {
-        val boardDimension = getBoardDimension()
-        for (i in 0 until boardDimension) {
-            for (j in 0 until boardDimension) {
-                val aux = piecesMatrix[i][j]
-                if (aux != null) {
-                    if (aux == piece) {
-                        return Position(i, j)
-                    }
-                }
-            }
-        }
-        return null
-    }
-
-    /**
      * @param view View being added.
      * @param i    i coord.
      * @param j    j coord.
@@ -250,14 +191,6 @@ class ChessView : GridLayout {
         val view = getChildAt(pos) as FrameLayout
         val image = view.getChildAt(1)
         image.visibility = GONE
-    }
-
-    fun unmarkAllTiles() {
-        for (view in markedTiles) {
-            val posViewTabuleiro = getTilePos(view)
-            unmarkTile(posViewTabuleiro.i, posViewTabuleiro.j)
-        }
-        markedTiles.clear()
     }
 
     private fun createTile(imageId: Drawable?, dimm: Int): FrameLayout {
@@ -291,7 +224,6 @@ class ChessView : GridLayout {
         piece.setImageResource(imageId)
         piece.scaleType = ImageView.ScaleType.CENTER_CROP
         linearLayout.id = pieceId
-        linearLayout.setOnClickListener(onClickPiece())
         linearLayout.addView(piece)
         return linearLayout
     }
@@ -309,23 +241,12 @@ class ChessView : GridLayout {
         return getChildAt(position.i * size + position.j)
     }
 
-    private fun onClickPiece(): OnClickListener {
-        return OnClickListener { v ->
-            unmarkAllTiles()
-            val isSameLast = v == lastSelectedPiece
-            currentPieceSelected = if (isSameLast && currentPieceSelected != null) null else v
-            lastSelectedPiece = v
-        }
-    }
-
     private fun onClickTile(): OnClickListener {
         return OnClickListener { v ->
             if (boardListener != null) {
                 val pos = getTilePos(v)
-                val posPeca = getPiecePos(lastSelectedPiece)
-                boardListener!!.onTileClicked(posPeca, pos)
+                boardListener!!.onTileClicked(pos)
             }
-            unmarkAllTiles()
         }
     }
 
@@ -358,7 +279,7 @@ class ChessView : GridLayout {
     }
 
     interface BoardListener {
-        fun onTileClicked(piecePosition: Position?, positionTile: Position)
+        fun onTileClicked(positionTile: Position)
     }
 
     private fun getBoardDimension(): Int {
