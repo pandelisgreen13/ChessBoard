@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.pchasapis.chess.common.utils.SharePreferencesUtil
 import com.pchasapis.chess.databinding.ActivityHomeBinding
 import com.pchasapis.chess.model.Position
 import com.pchasapis.chess.mvp.presenter.home.HomePresenter
@@ -18,6 +19,7 @@ class HomeActivity : AppCompatActivity(), HomeView {
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var presenter: HomePresenter
+    private val sharePreferencesUtil = SharePreferencesUtil(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +28,11 @@ class HomeActivity : AppCompatActivity(), HomeView {
         presenter = HomePresenterImpl(
             this,
             getMoveArgument(),
-            getBoardArgument())
+            getBoardArgument(),
+            sharePreferencesUtil.getBoardSize(),
+            sharePreferencesUtil.getKnightPosition(),
+            sharePreferencesUtil.getTargetPosition()
+        )
         binding.chessView.setDimension(presenter.getBoardSize())
         presenter.setBoard()
 
@@ -56,6 +62,12 @@ class HomeActivity : AppCompatActivity(), HomeView {
 
     override fun handleLoadingView(visibility: Boolean) {
         binding.loadingView.visibility = if (visibility) View.VISIBLE else View.GONE
+    }
+
+    override fun savePositions(knightPosition: Position, targetPosition: Position, boardSize: Int) {
+        sharePreferencesUtil.setKnightPosition(knightPosition.i, knightPosition.j)
+        sharePreferencesUtil.setTargetPosition(targetPosition.i, targetPosition.j)
+        sharePreferencesUtil.setBoardSize(boardSize)
     }
 
     override fun isAttached(): Boolean {

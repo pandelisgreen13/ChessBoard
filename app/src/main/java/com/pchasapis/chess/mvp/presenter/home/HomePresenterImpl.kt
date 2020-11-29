@@ -16,7 +16,10 @@ import java.util.*
 
 class HomePresenterImpl(homeView: HomeView,
                         private val maxMoves: Int,
-                        private val boardSize: Int)
+                        private val boardSize: Int,
+                        private val savedBoardSize: Int,
+                        private val savedKnightPosition: Position?,
+                        private val savedTargetPosition: Position?)
     : BasePresenterImpl<HomeView>(homeView), HomePresenter {
 
     private var knightPosition: Position? = null
@@ -24,6 +27,13 @@ class HomePresenterImpl(homeView: HomeView,
     private var queue: Queue<Tile> = LinkedList()
     private var isNotReachable: Boolean = true
     private val scope = CoroutineScope(Job() + Dispatchers.Main)
+
+    init {
+        if (boardSize == savedBoardSize) {
+            knightPosition = savedKnightPosition
+            targetPosition = savedTargetPosition
+        }
+    }
 
     private var chessboard =
         Array(boardSize) { arrayOfNulls<Tile>(boardSize) }
@@ -93,6 +103,7 @@ class HomePresenterImpl(homeView: HomeView,
                         getView()?.let {
                             it.moviePiece(knightPath)
                             it.handleLoadingView(false)
+                            it.savePositions(knightPosition!!, targetPosition!!, boardSize)
                         }
                     } else {
                         withContext(Dispatchers.Default) {

@@ -10,4 +10,5 @@ interface HomeView : BaseView {
     fun showError(errorMessage: Int, count: Int? = null)
     fun removePiece(it: Position)
     fun handleLoadingView(visibility: Boolean)
+    fun savePositions(knightPosition: Position, targetPosition: Position, boardSize: Int)
 }

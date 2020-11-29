@@ -1,6 +1,5 @@
 package com.pchasapis.chess.common.helper
 
-import android.util.Log
 import com.pchasapis.chess.model.Position
 import com.pchasapis.chess.model.Tile
 import java.util.*
@@ -44,7 +43,6 @@ object BfsHelper {
                 queue.add(Tile(x, y, depth))
             }
         }
-        //Log.d("queue-> ", "${queue.size}")
         return queue
     }
 
