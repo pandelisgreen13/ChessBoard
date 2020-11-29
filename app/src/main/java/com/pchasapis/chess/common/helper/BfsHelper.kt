@@ -1,4 +1,4 @@
-package com.pchasapis.chess.helper
+package com.pchasapis.chess.common.helper
 
 import android.util.Log
 import com.pchasapis.chess.model.Position

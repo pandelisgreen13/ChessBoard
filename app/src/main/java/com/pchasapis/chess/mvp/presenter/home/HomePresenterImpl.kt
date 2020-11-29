@@ -2,7 +2,7 @@ package com.pchasapis.chess.mvp.presenter.home
 
 import android.util.Log
 import com.pchasapis.chess.R
-import com.pchasapis.chess.helper.BfsHelper
+import com.pchasapis.chess.common.helper.BfsHelper
 import com.pchasapis.chess.model.Position
 import com.pchasapis.chess.model.Tile
 import com.pchasapis.chess.mvp.presenter.base.BasePresenterImpl

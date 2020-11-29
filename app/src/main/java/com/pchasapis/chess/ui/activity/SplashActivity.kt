@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.pchasapis.chess.common.extensions.closeSoftKeyboard
 import com.pchasapis.chess.databinding.ActivitySplashBinding
 import com.pchasapis.chess.mvp.presenter.splash.SplashPresenter
 import com.pchasapis.chess.mvp.presenter.splash.SplashPresenterImpl
@@ -25,9 +26,6 @@ class SplashActivity : AppCompatActivity(), SplashView {
     }
 
     override fun proceedToHome(maxMoves: String, boardSize: String) {
-//        val controller = view.windowInsetsController
-//        controller.hide(Type.ime())
-
         val intent = Intent(this, HomeActivity::class.java)
         intent.putExtra(MAX_MOVE, maxMoves.toInt())
         intent.putExtra(BOARD_SIZE, boardSize.toInt())
@@ -45,6 +43,7 @@ class SplashActivity : AppCompatActivity(), SplashView {
     private fun initLayout() {
         binding.startButton.setOnClickListener {
             checkFields()
+            closeSoftKeyboard(this)
         }
 
         binding.boardSizeEditText.setOnEditorActionListener { _, actionId, _ ->

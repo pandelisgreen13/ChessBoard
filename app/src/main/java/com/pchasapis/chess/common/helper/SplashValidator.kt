@@ -1,4 +1,4 @@
-package com.pchasapis.chess.helper
+package com.pchasapis.chess.common.helper
 
 object SplashValidator {
 

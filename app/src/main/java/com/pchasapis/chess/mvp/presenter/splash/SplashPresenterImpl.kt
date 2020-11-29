@@ -1,7 +1,7 @@
 package com.pchasapis.chess.mvp.presenter.splash
 
 import com.pchasapis.chess.R
-import com.pchasapis.chess.helper.SplashValidator
+import com.pchasapis.chess.common.helper.SplashValidator
 import com.pchasapis.chess.mvp.presenter.base.BasePresenterImpl
 import com.pchasapis.chess.mvp.view.splash.SplashView
 
