@@ -75,7 +75,10 @@ class HomePresenterImpl(homeView: HomeView,
                         isNotReachable = false
                         Log.d("Steps->", currentTile.depth.toString())
                         if (currentTile.depth > maxMoves) {
-                            getView()?.showError(R.string.error_steps, maxMoves)
+                            getView()?.let {
+                                it.handleLoadingView(false)
+                                it.showError(R.string.error_steps, maxMoves)
+                            }
                             return@launch
                         }
                         val knightPath = withContext(Dispatchers.Default) {

@@ -34,7 +34,7 @@ object BfsHelper {
                        current: Tile,
                        depth: Int,
                        chessboard: Array<Array<Tile?>>,
-                       boardSize: Int) {
+                       boardSize: Int): Queue<Tile> {
         for (i in xMoves.indices) {
             val x = current.x + xMoves[i]
             val y = current.y + yMoves[i]
@@ -44,7 +44,8 @@ object BfsHelper {
                 queue.add(Tile(x, y, depth))
             }
         }
-        Log.d("queue-> ", "${queue.size}")
+        //Log.d("queue-> ", "${queue.size}")
+        return queue
     }
 
     private fun isNotVisited(x: Int, y: Int, chessboard: Array<Array<Tile?>>): Boolean {

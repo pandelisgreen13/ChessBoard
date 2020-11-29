@@ -4,11 +4,11 @@ import com.pchasapis.chess.model.Position
 import com.pchasapis.chess.model.Tile
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNotNull
+import junit.framework.Assert.assertTrue
 import org.junit.Test
 import java.util.*
 
 class BfsHelperTest {
-
 
     @Test
     fun `Given start and end position with one move When BfsHelper is called Then it returns knight actual path`() {
@@ -42,6 +42,16 @@ class BfsHelperTest {
         }
     }
 
+    @Test
+    fun `calculate available moves for specific tile and add it to queue if it is not yet visited`() {
+        val actualTile = Tile(3, 3, 2)
+        val queue: Queue<Tile> = LinkedList()
+
+        val result = BfsHelper.calculateMoves(queue, actualTile, 2, chessBoardWithOneMove(), 6)
+        assertTrue(result.isNotEmpty())
+    }
+
+
     private fun startPosition(x: Int, y: Int): Tile {
         return createTile(x, y)
     }
@@ -50,13 +60,16 @@ class BfsHelperTest {
         return createTile(x, y)
     }
 
-    private fun createTile(x: Int, y: Int): Tile {
-        return Tile(x, y)
+    private fun createTile(x: Int, y: Int, isVisited: Boolean = false): Tile {
+        return Tile(
+            x = x,
+            y = y,
+            isVisited = isVisited)
     }
 
     private fun chessBoardWithOneMove(): Array<Array<Tile?>> {
         val chessBoard = Array(6) { arrayOfNulls<Tile>(6) }
-        chessBoard[3][2] = createTile(5, 2)
+        chessBoard[3][2] = createTile(5, 2, true)
         return chessBoard
     }
 

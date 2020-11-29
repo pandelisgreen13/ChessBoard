@@ -18,6 +18,7 @@
         <item name="android:inputType">number</item>
         <item name="android:maxLines">1</item>
         <item name="android:padding">5dp</item>
+        <item name="android:maxLength">2</item>
     </style>
 
 </resources>
