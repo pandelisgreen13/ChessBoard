@@ -18,8 +18,9 @@ class HomePresenterImpl(homeView: HomeView,
                         private val maxMoves: Int,
                         private val boardSize: Int,
                         private val savedBoardSize: Int,
-                        private val savedKnightPosition: Position?,
-                        private val savedTargetPosition: Position?)
+                        private var savedKnightPosition: Position?,
+                        private var savedTargetPosition: Position?,
+                        private var savedMaxMoves: Int)
     : BasePresenterImpl<HomeView>(homeView), HomePresenter {
 
     private var knightPosition: Position? = null
@@ -31,13 +32,11 @@ class HomePresenterImpl(homeView: HomeView,
     init {
         if (boardSize == savedBoardSize) {
             knightPosition = savedKnightPosition
-            targetPosition = savedTargetPosition
         }
     }
 
     private var chessboard =
         Array(boardSize) { arrayOfNulls<Tile>(boardSize) }
-
 
     override fun getBoardSize(): Int {
         return boardSize
@@ -55,9 +54,19 @@ class HomePresenterImpl(homeView: HomeView,
                     Integer.MAX_VALUE)
             }
         }
+        // restore saved positions if board has same size with previous
+        if (boardSize != savedBoardSize) {
+            return
+        }
+        if (savedKnightPosition != null && savedTargetPosition != null) {
+            if (savedMaxMoves <= maxMoves) {
+                getView()?.showPosition(savedKnightPosition!!, R.drawable.ic_knight_black, 100)
+            }
+            calculateTile(savedTargetPosition!!)
+        }
     }
 
-    override fun calculateTile(piecePosition: Position?, positionTile: Position) {
+    override fun calculateTile(positionTile: Position) {
         if (!isViewAttached()) {
             return
         }
@@ -85,6 +94,9 @@ class HomePresenterImpl(homeView: HomeView,
                         isNotReachable = false
                         Log.d("Steps->", currentTile.depth.toString())
                         if (currentTile.depth > maxMoves) {
+                            if (savedMaxMoves > maxMoves) {
+                                clearChess()
+                            }
                             getView()?.let {
                                 it.handleLoadingView(false)
                                 it.showError(R.string.error_steps, maxMoves)
@@ -103,7 +115,11 @@ class HomePresenterImpl(homeView: HomeView,
                         getView()?.let {
                             it.moviePiece(knightPath)
                             it.handleLoadingView(false)
-                            it.savePositions(knightPosition!!, targetPosition!!, boardSize)
+                            it.savePositions(
+                                knightPosition!!,
+                                targetPosition!!,
+                                boardSize,
+                                maxMoves)
                         }
                     } else {
                         withContext(Dispatchers.Default) {
@@ -131,6 +147,10 @@ class HomePresenterImpl(homeView: HomeView,
         if (!isViewAttached()) {
             return
         }
+        savedKnightPosition = null
+        savedKnightPosition = null
+        chessboard = Array(boardSize) { arrayOfNulls(boardSize) }
+        queue = LinkedList()
         knightPosition?.let {
             getView()?.removePiece(it)
             knightPosition = null
@@ -138,11 +158,9 @@ class HomePresenterImpl(homeView: HomeView,
 
         targetPosition?.let {
             getView()?.removePiece(it)
-            chessboard = Array(boardSize) { arrayOfNulls(boardSize) }
-            setBoard()
-            queue = LinkedList()
-            isNotReachable = true
             targetPosition = null
         }
+        isNotReachable = true
+        setBoard()
     }
 }

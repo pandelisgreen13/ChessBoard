@@ -19,7 +19,6 @@ class HomeActivity : AppCompatActivity(), HomeView {
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var presenter: HomePresenter
-    private val sharePreferencesUtil = SharePreferencesUtil(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,13 +28,13 @@ class HomeActivity : AppCompatActivity(), HomeView {
             this,
             getMoveArgument(),
             getBoardArgument(),
-            sharePreferencesUtil.getBoardSize(),
-            sharePreferencesUtil.getKnightPosition(),
-            sharePreferencesUtil.getTargetPosition()
+            SharePreferencesUtil.getBoardSize(this),
+            SharePreferencesUtil.getKnightPosition(this),
+            SharePreferencesUtil.getTargetPosition(this),
+            SharePreferencesUtil.getMaxMoves(this)
         )
         binding.chessView.setDimension(presenter.getBoardSize())
         presenter.setBoard()
-
         initLayout()
     }
 
@@ -64,10 +63,14 @@ class HomeActivity : AppCompatActivity(), HomeView {
         binding.loadingView.visibility = if (visibility) View.VISIBLE else View.GONE
     }
 
-    override fun savePositions(knightPosition: Position, targetPosition: Position, boardSize: Int) {
-        sharePreferencesUtil.setKnightPosition(knightPosition.i, knightPosition.j)
-        sharePreferencesUtil.setTargetPosition(targetPosition.i, targetPosition.j)
-        sharePreferencesUtil.setBoardSize(boardSize)
+    override fun savePositions(knightPosition: Position,
+                               targetPosition: Position,
+                               boardSize: Int,
+                               maxMoves: Int) {
+        SharePreferencesUtil.setKnightPosition(knightPosition.i, knightPosition.j, this)
+        SharePreferencesUtil.setTargetPosition(targetPosition.i, targetPosition.j, this)
+        SharePreferencesUtil.setBoardSize(boardSize, this)
+        SharePreferencesUtil.setMaxMoves(maxMoves, this)
     }
 
     override fun isAttached(): Boolean {
@@ -85,7 +88,7 @@ class HomeActivity : AppCompatActivity(), HomeView {
 
         binding.chessView.setBoardListener(object : BoardListener {
             override fun onTileClicked(piecePosition: Position?, positionTile: Position) {
-                presenter.calculateTile(piecePosition, positionTile)
+                presenter.calculateTile(positionTile)
             }
         })
     }
