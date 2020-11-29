@@ -62,7 +62,7 @@ class HomeActivity : AppCompatActivity(), HomeView {
             presenter.clearChess()
         }
 
-        binding.toolbar.actionButtonImageView.setOnClickListener {
+        binding.toolbar.backButtonImageView.setOnClickListener {
             finish()
         }
 

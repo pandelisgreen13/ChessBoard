@@ -12,8 +12,8 @@ import android.widget.FrameLayout
 import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
-import com.pchasapis.chess.model.Position
 import com.pchasapis.chess.R
+import com.pchasapis.chess.model.Position
 import java.util.*
 
 class ChessView : GridLayout {
@@ -54,12 +54,12 @@ class ChessView : GridLayout {
 
     constructor(context: Context?) : super(context) {
         piecesMatrix =
-            Array(dimension ?: BOARD_DIMENSION) { arrayOfNulls<View>(dimension ?: BOARD_DIMENSION) }
+            Array(getBoardDimension()) { arrayOfNulls(getBoardDimension()) }
         markedTiles = ArrayList()
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        piecesMatrix = Array(BOARD_DIMENSION) { arrayOfNulls<View>(BOARD_DIMENSION) }
+        piecesMatrix = Array(getBoardDimension()) { arrayOfNulls(getBoardDimension()) }
         markedTiles = ArrayList()
         initAttributes(context, attrs)
     }
@@ -69,7 +69,7 @@ class ChessView : GridLayout {
         attrs,
         defStyleAttr
     ) {
-        piecesMatrix = Array(BOARD_DIMENSION) { arrayOfNulls<View>(BOARD_DIMENSION) }
+        piecesMatrix = Array(getBoardDimension()) { arrayOfNulls(getBoardDimension()) }
         markedTiles = ArrayList()
         initAttributes(context, attrs)
     }
@@ -106,14 +106,14 @@ class ChessView : GridLayout {
             a.recycle()
         }
 
-        val arrayOfNulls: Array<View?> = arrayOfNulls(dimension ?: BOARD_DIMENSION)
-        piecesMatrix = Array(dimension ?: BOARD_DIMENSION) { arrayOfNulls }
+        val arrayOfNulls: Array<View?> = arrayOfNulls(getBoardDimension())
+        piecesMatrix = Array(getBoardDimension()) { arrayOfNulls }
         markedTiles = ArrayList()
     }
 
     private fun createBoard(dimm: Int) {
-        this.rowCount = dimension ?: BOARD_DIMENSION
-        this.columnCount = dimension ?: BOARD_DIMENSION
+        this.rowCount = getBoardDimension()
+        this.columnCount = getBoardDimension()
         setBoardBackground(dimm)
     }
 
@@ -143,8 +143,7 @@ class ChessView : GridLayout {
      * Create board background.
      */
     private fun setBoardBackground(dimm: Int) {
-        //Para cada coordenada do tabuleiro, cria uma view.
-        val boardDimension = dimension ?: BOARD_DIMENSION
+        val boardDimension = getBoardDimension()
         for (i in 0 until boardDimension) {
             for (j in 0 until boardDimension) {
                 val tile: View = createTile(chooseTileColor(i, j), dimm)
@@ -206,7 +205,7 @@ class ChessView : GridLayout {
      */
     private fun getTilePos(tile: View): Position {
         val index = indexOfChild(tile)
-        val boardDimension = dimension ?: BOARD_DIMENSION
+        val boardDimension = getBoardDimension()
         val linha = index / boardDimension
         val coluna = index % boardDimension
         return Position(linha, coluna)
@@ -219,7 +218,7 @@ class ChessView : GridLayout {
      * @return Pos instance.
      */
     private fun getPiecePos(piece: View?): Position? {
-        val boardDimension = dimension ?: BOARD_DIMENSION
+        val boardDimension = getBoardDimension()
         for (i in 0 until boardDimension) {
             for (j in 0 until boardDimension) {
                 val aux = piecesMatrix[i][j]
@@ -246,7 +245,7 @@ class ChessView : GridLayout {
     }
 
     fun unmarkTile(i: Int, j: Int) {
-        val boardDimension = dimension ?: BOARD_DIMENSION
+        val boardDimension = getBoardDimension()
         val pos = i * boardDimension + j
         val view = getChildAt(pos) as FrameLayout
         val image = view.getChildAt(1)
@@ -262,7 +261,7 @@ class ChessView : GridLayout {
     }
 
     private fun createTile(imageId: Drawable?, dimm: Int): FrameLayout {
-        val boardDimension = dimension ?: BOARD_DIMENSION
+        val boardDimension = getBoardDimension()
         val size = dimm / boardDimension
         val frameLayout = FrameLayout(context)
         val params = FrameLayout.LayoutParams(size, size)
@@ -281,7 +280,7 @@ class ChessView : GridLayout {
     }
 
     private fun createPiece(imageId: Int, pieceId: Int): LinearLayout {
-        val boardDimension = dimension ?: BOARD_DIMENSION
+        val boardDimension = getBoardDimension()
         val size = dimm / boardDimension
         val linearLayout = LinearLayout(context)
         val params = LinearLayout.LayoutParams(size, size, Gravity.CENTER.toFloat())
@@ -306,7 +305,7 @@ class ChessView : GridLayout {
     }
 
     private fun getTile(position: Position): View {
-        val size = dimension ?: BOARD_DIMENSION
+        val size = getBoardDimension()
         return getChildAt(position.i * size + position.j)
     }
 
@@ -349,7 +348,7 @@ class ChessView : GridLayout {
     }
 
     private fun isPosValid(i: Int, j: Int): Boolean {
-        val boardDimension = dimension ?: BOARD_DIMENSION
+        val boardDimension = getBoardDimension()
         val max = boardDimension - 1
         return !(i < 0 || i > max || j < 0 || j > max)
     }
@@ -362,12 +361,16 @@ class ChessView : GridLayout {
         fun onTileClicked(piecePosition: Position?, positionTile: Position)
     }
 
+    private fun getBoardDimension(): Int {
+        return dimension ?: BOARD_DIMENSION
+    }
+
     private inner class PieceQueue(var position: Position, var imageId: Int)
     companion object {
         /**
          * Board dimension.
-         * Default 8x8.
+         * Default 6x6.
          */
-        const val BOARD_DIMENSION = 8
+        private const val BOARD_DIMENSION = 6
     }
 }
