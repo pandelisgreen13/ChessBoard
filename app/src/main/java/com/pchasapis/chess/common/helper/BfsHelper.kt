@@ -12,7 +12,6 @@ object BfsHelper {
 
     fun findPath(start: Tile,
                  end: Tile,
-                 currentTile: Tile,
                  chessboard: Array<Array<Tile?>>): ArrayList<Position> {
         val tilePath = mutableListOf<Tile>()
         val knightFinalPath: ArrayList<Position> = arrayListOf()
@@ -22,9 +21,9 @@ object BfsHelper {
             tilePath.add(currentPath)
             currentPath = chessboard[currentPath.x][currentPath.y]
         }
-        tilePath.add(Tile(start.x, start.y, 0))
+        knightFinalPath.add(Position(end.x, end.y))
 
-        knightFinalPath.add(Position(currentTile.x, currentTile.y))
+        tilePath.add(Tile(start.x, start.y, 0))
         tilePath.forEach {
             knightFinalPath.add(Position(it.x, it.y))
         }

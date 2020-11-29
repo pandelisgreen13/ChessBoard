@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
 
-class HomePresenterImpl(private val homeView: HomeView,
+class HomePresenterImpl(homeView: HomeView,
                         private val maxMoves: Int,
                         private val boardSize: Int)
     : BasePresenterImpl<HomeView>(homeView), HomePresenter {
@@ -53,14 +53,13 @@ class HomePresenterImpl(private val homeView: HomeView,
         }
         if (knightPosition == null) {
             knightPosition = Position(positionTile.i, positionTile.j)
-            homeView.showPosition(knightPosition!!, R.drawable.ic_knight_black, 100)
+            getView()?.showPosition(knightPosition!!, R.drawable.ic_knight_black, 100)
             return
         }
 
         if (targetPosition == null && knightPosition?.equals(positionTile) == false) {
             targetPosition = Position(positionTile.i, positionTile.j)
-            homeView.showPosition(targetPosition!!, R.drawable.ic_flag, 200)
-
+            getView()?.handleLoadingView(true)
             val startTile = Tile(knightPosition!!.i, knightPosition!!.j, 0, true)
             val endTile = Tile(targetPosition!!.i, targetPosition!!.j)
 
@@ -76,20 +75,22 @@ class HomePresenterImpl(private val homeView: HomeView,
                         isNotReachable = false
                         Log.d("Steps->", currentTile.depth.toString())
                         if (currentTile.depth > maxMoves) {
-                            homeView.showError(R.string.error_steps, maxMoves)
+                            getView()?.showError(R.string.error_steps, maxMoves)
                             return@launch
                         }
                         val knightPath = withContext(Dispatchers.Default) {
                             BfsHelper.findPath(
                                 startTile,
                                 endTile,
-                                currentTile,
                                 chessboard)
                         }
                         if (!isViewAttached()) {
                             return@launch
                         }
-                        homeView.moviePiece(knightPath)
+                        getView()?.let {
+                            it.moviePiece(knightPath)
+                            it.handleLoadingView(false)
+                        }
                     } else {
                         withContext(Dispatchers.Default) {
                             BfsHelper.calculateMoves(
@@ -102,26 +103,27 @@ class HomePresenterImpl(private val homeView: HomeView,
                     }
                 }
                 if (isNotReachable) {
-                    if(!isViewAttached()){
+                    if (!isViewAttached()) {
                         return@launch
                     }
-                    homeView.showError(R.string.error_not_reached)
+                    getView()?.handleLoadingView(false)
+                    getView()?.showError(R.string.error_not_reached)
                 }
             }
         }
     }
 
     override fun clearChess() {
-        if(!isViewAttached()){
+        if (!isViewAttached()) {
             return
         }
         knightPosition?.let {
-            homeView.removePiece(it)
+            getView()?.removePiece(it)
             knightPosition = null
         }
 
         targetPosition?.let {
-            homeView.removePiece(it)
+            getView()?.removePiece(it)
             chessboard = Array(boardSize) { arrayOfNulls(boardSize) }
             setBoard()
             queue = LinkedList()

@@ -9,4 +9,5 @@ interface HomeView : BaseView {
     fun moviePiece(path: ArrayList<Position>)
     fun showError(errorMessage: Int, count: Int? = null)
     fun removePiece(it: Position)
+    fun handleLoadingView(visibility: Boolean)
 }

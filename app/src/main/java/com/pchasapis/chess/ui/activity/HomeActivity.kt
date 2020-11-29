@@ -1,6 +1,7 @@
 package com.pchasapis.chess.ui.activity
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.pchasapis.chess.databinding.ActivityHomeBinding
@@ -51,6 +52,10 @@ class HomeActivity : AppCompatActivity(), HomeView {
 
     override fun removePiece(it: Position) {
         binding.chessView.removePiece(it.i, it.j)
+    }
+
+    override fun handleLoadingView(visibility: Boolean) {
+        binding.loadingView.visibility = if (visibility) View.VISIBLE else View.GONE
     }
 
     override fun isAttached(): Boolean {

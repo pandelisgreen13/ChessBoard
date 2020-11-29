@@ -6,10 +6,12 @@ object SplashValidator {
         return maxMoves.isNotEmpty() && maxMoves.toInt() > 0
     }
 
-    fun validateBoardSize(boardSize: String): Boolean {
-        return boardSize.isNotEmpty() && boardSize.toInt() in MIN_BOARD_SIZE..MAX_BOARD_SIZE
+    fun validateBoardSize(boardSize: String,
+                          minBoardSize: Int = 0,
+                          maxBoardSize: Int = 0): Boolean {
+        if (minBoardSize > maxBoardSize) {
+            return false
+        }
+        return boardSize.isNotEmpty() && boardSize.toInt() in minBoardSize..maxBoardSize
     }
-
-    private const val MIN_BOARD_SIZE = 6
-    private const val MAX_BOARD_SIZE = 16
 }
