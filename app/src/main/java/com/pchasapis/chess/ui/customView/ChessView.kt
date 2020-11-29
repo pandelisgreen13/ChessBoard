@@ -158,18 +158,13 @@ class ChessView : GridLayout {
      * @param i position coord i.
      * @param j position coord j.
      */
-    fun setPiece(i: Int, j: Int, imageid: Int, pieceId: Int = 0) {
+    fun setPiece(i: Int, j: Int, imageid: Int) {
         if (dimm == -1) {
             pieceQueues.add(PieceQueue(Position(i, j), imageid))
             return
         }
-        val view: View = createPiece(imageid, pieceId)
+        val view: View = createPiece(imageid)
         require(isPosValid(i, j)) { "Invalid position: [$i;$j]." }
-//        when (pieceId) {
-//            100 -> piecesMatrix[0][0] = view
-//            200 -> piecesMatrix[1][1] = view
-//            else ->
-//        }
         piecesMatrix[i][j] = view
         addViewToGrid(view, i, j)
     }
@@ -279,7 +274,7 @@ class ChessView : GridLayout {
         return frameLayout
     }
 
-    private fun createPiece(imageId: Int, pieceId: Int): LinearLayout {
+    private fun createPiece(imageId: Int): LinearLayout {
         val boardDimension = getBoardDimension()
         val size = dimm / boardDimension
         val linearLayout = LinearLayout(context)
@@ -290,7 +285,6 @@ class ChessView : GridLayout {
         piece.layoutParams = params
         piece.setImageResource(imageId)
         piece.scaleType = ImageView.ScaleType.CENTER_CROP
-        linearLayout.id = pieceId
         linearLayout.setOnClickListener(onClickPiece())
         linearLayout.addView(piece)
         return linearLayout

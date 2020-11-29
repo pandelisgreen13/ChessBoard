@@ -4,6 +4,7 @@ import com.pchasapis.chess.mvp.view.base.BaseView
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
 import java.lang.ref.WeakReference
@@ -12,9 +13,7 @@ open class BasePresenterImpl<out V : BaseView>(view: V) : BasePresenter<V> {
 
     private var viewRef: WeakReference<V>? = null
 
-    protected var job = SupervisorJob()
-    protected val uiDispatcher: CoroutineDispatcher = Dispatchers.Main
-    protected val bgDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private var job = Job()
     protected val uiScope = CoroutineScope(Dispatchers.Main + job)
 
     init {

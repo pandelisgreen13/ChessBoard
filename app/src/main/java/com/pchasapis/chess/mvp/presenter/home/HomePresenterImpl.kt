@@ -27,16 +27,13 @@ class HomePresenterImpl(homeView: HomeView,
     private var targetPosition: Position? = null
     private var queue: Queue<Tile> = LinkedList()
     private var isNotReachable: Boolean = true
-    private val scope = CoroutineScope(Job() + Dispatchers.Main)
+    private var chessboard = Array(boardSize) { arrayOfNulls<Tile>(boardSize) }
 
     init {
         if (boardSize == savedBoardSize) {
             knightPosition = savedKnightPosition
         }
     }
-
-    private var chessboard =
-        Array(boardSize) { arrayOfNulls<Tile>(boardSize) }
 
     override fun getBoardSize(): Int {
         return boardSize
@@ -60,7 +57,7 @@ class HomePresenterImpl(homeView: HomeView,
         }
         if (savedKnightPosition != null && savedTargetPosition != null) {
             if (savedMaxMoves <= maxMoves) {
-                getView()?.showPosition(savedKnightPosition!!, R.drawable.ic_knight_black, 100)
+                getView()?.showPosition(savedKnightPosition!!, R.drawable.ic_knight_black)
             }
             calculateTile(savedTargetPosition!!)
         }
@@ -72,21 +69,23 @@ class HomePresenterImpl(homeView: HomeView,
         }
         if (knightPosition == null) {
             knightPosition = Position(positionTile.i, positionTile.j)
-            getView()?.showPosition(knightPosition!!, R.drawable.ic_knight_black, 100)
+            getView()?.showPosition(knightPosition!!, R.drawable.ic_knight_black)
             return
         }
 
         if (targetPosition == null && knightPosition?.equals(positionTile) == false) {
-            targetPosition = Position(positionTile.i, positionTile.j)
             getView()?.handleLoadingView(true)
+            targetPosition = Position(positionTile.i, positionTile.j)
             val startTile = Tile(knightPosition!!.i, knightPosition!!.j, 0, true)
             val endTile = Tile(targetPosition!!.i, targetPosition!!.j)
 
             chessboard[knightPosition!!.i][knightPosition!!.j] = startTile
 
+            // create a queue and enqueue first node
             queue.add(startTile)
             var currentTile: Tile
-            scope.launch {
+            uiScope.launch {
+                // loop till queue is empty
                 while (queue.size != 0) {
                     currentTile = queue.poll()
 

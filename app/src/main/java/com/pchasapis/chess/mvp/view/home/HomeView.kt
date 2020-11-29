@@ -5,7 +5,7 @@ import com.pchasapis.chess.mvp.view.base.BaseView
 import java.util.*
 
 interface HomeView : BaseView {
-    fun showPosition(knightPosition: Position, drawableIcon: Int, i: Int)
+    fun showPosition(knightPosition: Position, drawableIcon: Int)
     fun moviePiece(path: ArrayList<Position>)
     fun showError(errorMessage: Int, count: Int? = null)
     fun removePiece(it: Position)

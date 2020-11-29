@@ -6,6 +6,7 @@ import java.util.*
 
 object BfsHelper {
 
+    // Below arrays details all 8 possible movements for a knight
     private val xMoves = intArrayOf(2, 1, -1, -2, -2, -1, 1, 2)
     private val yMoves = intArrayOf(1, 2, 2, 1, -1, -2, -2, -1)
 
@@ -34,7 +35,11 @@ object BfsHelper {
                        depth: Int,
                        chessboard: Array<Array<Tile?>>,
                        boardSize: Int): Queue<Tile> {
+
+        // check for all 8 possible movements for a knight
+        // and enqueue each valid movement into the queue
         for (i in xMoves.indices) {
+            // Get the new valid position of Knight from current
             val x = current.x + xMoves[i]
             val y = current.y + yMoves[i]
 
@@ -46,12 +51,13 @@ object BfsHelper {
         return queue
     }
 
+    //check if node is visited
     private fun isNotVisited(x: Int, y: Int, chessboard: Array<Array<Tile?>>): Boolean {
         val tile = chessboard[x][y]
         return tile?.isVisited ?: false
     }
 
-
+    // Check if (x, y) is valid chess board coordinates
     private fun inRange(x: Int, y: Int, boardSize: Int): Boolean {
         return x in 0 until boardSize - 1 && 0 <= y && y < boardSize
     }

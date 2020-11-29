@@ -24,26 +24,17 @@ class HomeActivity : AppCompatActivity(), HomeView {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        presenter = HomePresenterImpl(
-            this,
-            getMoveArgument(),
-            getBoardArgument(),
-            SharePreferencesUtil.getBoardSize(this),
-            SharePreferencesUtil.getKnightPosition(this),
-            SharePreferencesUtil.getTargetPosition(this),
-            SharePreferencesUtil.getMaxMoves(this)
-        )
+        initPresenter()
         binding.chessView.setDimension(presenter.getBoardSize())
         presenter.setBoard()
         initLayout()
     }
 
-    override fun showPosition(piecePosition: Position, drawableIcon: Int, i: Int) {
+    override fun showPosition(piecePosition: Position, drawableIcon: Int) {
         binding.chessView.setPiece(
             piecePosition.i,
             piecePosition.j,
-            drawableIcon,
-            i
+            drawableIcon
         )
     }
 
@@ -91,6 +82,18 @@ class HomeActivity : AppCompatActivity(), HomeView {
                 presenter.calculateTile(positionTile)
             }
         })
+    }
+
+    private fun initPresenter() {
+        presenter = HomePresenterImpl(
+            this,
+            getMoveArgument(),
+            getBoardArgument(),
+            SharePreferencesUtil.getBoardSize(this),
+            SharePreferencesUtil.getKnightPosition(this),
+            SharePreferencesUtil.getTargetPosition(this),
+            SharePreferencesUtil.getMaxMoves(this)
+        )
     }
 
     private fun getBoardArgument(): Int {

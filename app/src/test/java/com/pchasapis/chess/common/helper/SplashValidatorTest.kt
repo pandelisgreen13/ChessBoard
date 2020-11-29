@@ -51,7 +51,7 @@ class SplashValidatorTest {
     }
 
     @Test
-    fun `Given boardSize greater of minBoardSize and minBoardSize is equals with maxBoardSize When SplashValidator is called Then it returns false`() {
+    fun `Given boardSize greater of minBoardSize and minBoardSize is equals with maxBoardSize When SplashValidator is called Then it returns true`() {
         val result = SplashValidator.validateBoardSize(
             boardSize("7"),
             minBoardSize(),
