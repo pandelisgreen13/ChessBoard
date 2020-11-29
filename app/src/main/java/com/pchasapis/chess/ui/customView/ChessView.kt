@@ -166,11 +166,12 @@ class ChessView : GridLayout {
         }
         val view: View = createPiece(imageid, pieceId)
         require(isPosValid(i, j)) { "Invalid position: [$i;$j]." }
-        when (pieceId) {
-            100 -> piecesMatrix[0][0] = view
-            200 -> piecesMatrix[1][1] = view
-            else -> piecesMatrix[i][j] = view
-        }
+//        when (pieceId) {
+//            100 -> piecesMatrix[0][0] = view
+//            200 -> piecesMatrix[1][1] = view
+//            else ->
+//        }
+        piecesMatrix[i][j] = view
         addViewToGrid(view, i, j)
     }
 

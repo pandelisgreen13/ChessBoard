@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/brown">
@@ -34,11 +33,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/common_twenty_dp"
+        android:text="@string/splash_default_move"
         android:textAlignment="center"
         app:layout_constraintEnd_toStartOf="@+id/verticalGuideline"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/movesTextView"
-        tools:text="2" />
+        app:layout_constraintTop_toBottomOf="@+id/movesTextView" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/boardTextView"
@@ -57,10 +56,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/common_twenty_dp"
+        android:text="@string/splash_default_board_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/verticalGuideline"
-        app:layout_constraintTop_toBottomOf="@+id/boardTextView"
-        tools:text="2" />
+        app:layout_constraintTop_toBottomOf="@+id/boardTextView" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/verticalGuideline"

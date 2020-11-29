@@ -1,12 +1,12 @@
-package com.pchasapis.chess.mvp.presenter
+package com.pchasapis.chess.mvp.presenter.home
 
 import android.util.Log
-import com.pchasapis.chess.model.Position
 import com.pchasapis.chess.R
-import com.pchasapis.chess.model.Tile
 import com.pchasapis.chess.helper.BfsHelper
-import com.pchasapis.chess.mvp.view.HomeView
-import com.pchasapis.chess.ui.activity.HomeActivity
+import com.pchasapis.chess.model.Position
+import com.pchasapis.chess.model.Tile
+import com.pchasapis.chess.mvp.presenter.base.BasePresenterImpl
+import com.pchasapis.chess.mvp.view.home.HomeView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -15,7 +15,9 @@ import kotlinx.coroutines.withContext
 import java.util.*
 
 class HomePresenterImpl(private val homeView: HomeView,
-                        private val maxMoves: Int) : HomePresenter {
+                        private val maxMoves: Int,
+                        private val boardSize: Int)
+    : BasePresenterImpl<HomeView>(homeView), HomePresenter {
 
     private var knightPosition: Position? = null
     private var targetPosition: Position? = null
@@ -24,11 +26,17 @@ class HomePresenterImpl(private val homeView: HomeView,
     private val scope = CoroutineScope(Job() + Dispatchers.Main)
 
     private var chessboard =
-        Array(HomeActivity.BOARD_DEFAULT_DIMENSION) { arrayOfNulls<Tile>(HomeActivity.BOARD_DEFAULT_DIMENSION) }
-    private var chessBoardDistance = HomeActivity.BOARD_DEFAULT_DIMENSION
+        Array(boardSize) { arrayOfNulls<Tile>(boardSize) }
 
-    override fun setBoard(boardSize: Int) {
-        chessBoardDistance = boardSize
+
+    override fun getBoardSize(): Int {
+        return boardSize
+    }
+
+    override fun setBoard() {
+        if(!isViewAttached()){
+            return
+        }
         for (i in 0 until boardSize) {
             for (j in 0 until boardSize) {
                 chessboard[i][j] = Tile(
@@ -82,7 +90,8 @@ class HomePresenterImpl(private val homeView: HomeView,
                                 queue,
                                 currentTile,
                                 ++currentTile.depth,
-                                chessboard)
+                                chessboard,
+                                boardSize)
                         }
                     }
                 }
@@ -101,8 +110,8 @@ class HomePresenterImpl(private val homeView: HomeView,
 
         targetPosition?.let {
             homeView.removePiece(it)
-            chessboard = Array(chessBoardDistance) { arrayOfNulls(chessBoardDistance) }
-            setBoard(chessBoardDistance)
+            chessboard = Array(boardSize) { arrayOfNulls(boardSize) }
+            setBoard()
             queue = LinkedList()
             isNotReachable = true
             targetPosition = null

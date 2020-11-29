@@ -3,7 +3,6 @@ package com.pchasapis.chess.helper
 import android.util.Log
 import com.pchasapis.chess.model.Position
 import com.pchasapis.chess.model.Tile
-import com.pchasapis.chess.ui.activity.HomeActivity.Companion.BOARD_DEFAULT_DIMENSION
 import java.util.*
 
 object BfsHelper {
@@ -35,12 +34,13 @@ object BfsHelper {
     fun calculateMoves(queue: Queue<Tile>,
                        current: Tile,
                        depth: Int,
-                       chessboard: Array<Array<Tile?>>){
+                       chessboard: Array<Array<Tile?>>,
+                       boardSize: Int) {
         for (i in xMoves.indices) {
             val x = current.x + xMoves[i]
             val y = current.y + yMoves[i]
 
-            if (inRange(x, y) && !isNotVisited(x, y, chessboard)) {
+            if (inRange(x, y, boardSize) && !isNotVisited(x, y, chessboard)) {
                 chessboard[x][y] = Tile(current.x, current.y, depth, true)
                 queue.add(Tile(x, y, depth))
             }
@@ -54,7 +54,7 @@ object BfsHelper {
     }
 
 
-    private fun inRange(x: Int, y: Int): Boolean {
-        return x in 0 until BOARD_DEFAULT_DIMENSION - 1 && 0 <= y && y < BOARD_DEFAULT_DIMENSION
+    private fun inRange(x: Int, y: Int, boardSize: Int): Boolean {
+        return x in 0 until boardSize - 1 && 0 <= y && y < boardSize
     }
 }

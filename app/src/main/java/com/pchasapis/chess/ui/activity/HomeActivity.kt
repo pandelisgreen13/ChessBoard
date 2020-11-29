@@ -1,14 +1,15 @@
 package com.pchasapis.chess.ui.activity
 
 import android.os.Bundle
-import android.os.Handler
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.pchasapis.chess.model.Position
 import com.pchasapis.chess.databinding.ActivityHomeBinding
-import com.pchasapis.chess.mvp.presenter.HomePresenter
-import com.pchasapis.chess.mvp.presenter.HomePresenterImpl
-import com.pchasapis.chess.mvp.view.HomeView
+import com.pchasapis.chess.model.Position
+import com.pchasapis.chess.mvp.presenter.home.HomePresenter
+import com.pchasapis.chess.mvp.presenter.home.HomePresenterImpl
+import com.pchasapis.chess.mvp.view.home.HomeView
+import com.pchasapis.chess.ui.activity.SplashActivity.Companion.BOARD_SIZE
+import com.pchasapis.chess.ui.activity.SplashActivity.Companion.MAX_MOVE
 import com.pchasapis.chess.ui.customView.ChessView.BoardListener
 import java.util.*
 
@@ -21,9 +22,12 @@ class HomeActivity : AppCompatActivity(), HomeView {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.chessView.setDimension(BOARD_DEFAULT_DIMENSION)
-        presenter = HomePresenterImpl(this, MAX_MOVES)
-        presenter.setBoard(BOARD_DEFAULT_DIMENSION)
+        presenter = HomePresenterImpl(
+            this,
+            getMoveArgument(),
+            getBoardArgument())
+        binding.chessView.setDimension(presenter.getBoardSize())
+        presenter.setBoard()
 
         binding.resetButton.setOnClickListener {
             presenter.clearChess()
@@ -46,9 +50,7 @@ class HomeActivity : AppCompatActivity(), HomeView {
     }
 
     override fun moviePiece(path: ArrayList<Position>) {
-        Handler().postDelayed(
-            { binding.chessView.movePiece(path.reversed()) },
-            POST_DELAY_ANIMATION)
+        binding.chessView.movePiece(path.reversed())
     }
 
     override fun showError(errorMessage: Int, count: Int?) {
@@ -59,9 +61,20 @@ class HomeActivity : AppCompatActivity(), HomeView {
         binding.chessView.removePiece(it.i, it.j)
     }
 
+    override fun isAttached(): Boolean {
+        return !isFinishing
+    }
+
+    private fun getBoardArgument(): Int {
+        return intent.getIntExtra(BOARD_SIZE, BOARD_DEFAULT_DIMENSION)
+    }
+
+    private fun getMoveArgument(): Int {
+        return intent.getIntExtra(MAX_MOVE, MAX_DEFAULT_MOVES)
+    }
+
     companion object {
-        const val BOARD_DEFAULT_DIMENSION = 6
-        const val POST_DELAY_ANIMATION = 200L
-        const val MAX_MOVES = 3
+        private const val BOARD_DEFAULT_DIMENSION = 6
+        private const val MAX_DEFAULT_MOVES = 3
     }
 }
