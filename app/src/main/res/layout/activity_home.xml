@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     android:background="@color/brown_light">
 
-    <include layout="@layout/include_toolbar" />
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/include_toolbar" />
 
     <com.pchasapis.chess.ui.customView.ChessView
         android:id="@+id/chessView"

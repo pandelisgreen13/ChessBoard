@@ -29,15 +29,7 @@ class HomeActivity : AppCompatActivity(), HomeView {
         binding.chessView.setDimension(presenter.getBoardSize())
         presenter.setBoard()
 
-        binding.resetButton.setOnClickListener {
-            presenter.clearChess()
-        }
-
-        binding.chessView.setBoardListener(object : BoardListener {
-            override fun onTileClicked(piecePosition: Position?, positionTile: Position) {
-                presenter.calculateTile(piecePosition, positionTile)
-            }
-        })
+        initLayout()
     }
 
     override fun showPosition(piecePosition: Position, drawableIcon: Int, i: Int) {
@@ -63,6 +55,22 @@ class HomeActivity : AppCompatActivity(), HomeView {
 
     override fun isAttached(): Boolean {
         return !isFinishing
+    }
+
+    private fun initLayout() {
+        binding.resetButton.setOnClickListener {
+            presenter.clearChess()
+        }
+
+        binding.toolbar.actionButtonImageView.setOnClickListener {
+            finish()
+        }
+
+        binding.chessView.setBoardListener(object : BoardListener {
+            override fun onTileClicked(piecePosition: Position?, positionTile: Position) {
+                presenter.calculateTile(piecePosition, positionTile)
+            }
+        })
     }
 
     private fun getBoardArgument(): Int {

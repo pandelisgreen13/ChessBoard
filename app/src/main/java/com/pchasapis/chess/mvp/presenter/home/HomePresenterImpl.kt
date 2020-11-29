@@ -34,7 +34,7 @@ class HomePresenterImpl(private val homeView: HomeView,
     }
 
     override fun setBoard() {
-        if(!isViewAttached()){
+        if (!isViewAttached()) {
             return
         }
         for (i in 0 until boardSize) {
@@ -48,6 +48,9 @@ class HomePresenterImpl(private val homeView: HomeView,
     }
 
     override fun calculateTile(piecePosition: Position?, positionTile: Position) {
+        if (!isViewAttached()) {
+            return
+        }
         if (knightPosition == null) {
             knightPosition = Position(positionTile.i, positionTile.j)
             homeView.showPosition(knightPosition!!, R.drawable.ic_knight_black, 100)
@@ -83,6 +86,9 @@ class HomePresenterImpl(private val homeView: HomeView,
                                 currentTile,
                                 chessboard)
                         }
+                        if (!isViewAttached()) {
+                            return@launch
+                        }
                         homeView.moviePiece(knightPath)
                     } else {
                         withContext(Dispatchers.Default) {
@@ -96,6 +102,9 @@ class HomePresenterImpl(private val homeView: HomeView,
                     }
                 }
                 if (isNotReachable) {
+                    if(!isViewAttached()){
+                        return@launch
+                    }
                     homeView.showError(R.string.error_not_reached)
                 }
             }
@@ -103,6 +112,9 @@ class HomePresenterImpl(private val homeView: HomeView,
     }
 
     override fun clearChess() {
+        if(!isViewAttached()){
+            return
+        }
         knightPosition?.let {
             homeView.removePiece(it)
             knightPosition = null

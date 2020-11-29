@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/actionBarSize"
     android:background="@color/brown"
@@ -10,17 +9,29 @@
     app:contentInsetRight="0dp"
     app:contentInsetStart="0dp">
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toStartOf="@+id/actionButtonImageView"
-        android:layout_toEndOf="@+id/backButtonImageView"
-        android:gravity="center_horizontal"
-        android:maxLines="1"
-        android:text="@string/app_name"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/toolbar_text_size"
-        android:textStyle="bold" />
+        android:layout_height="match_parent">
 
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/actionButtonImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="@dimen/home_back_button_padding"
+            android:src="@drawable/ic_back" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/actionButtonImageView"
+            android:gravity="center_horizontal"
+            android:maxLines="1"
+            android:text="@string/app_name"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/toolbar_text_size"
+            android:textStyle="bold" />
+    </RelativeLayout>
 </androidx.appcompat.widget.Toolbar>

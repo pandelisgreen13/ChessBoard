@@ -8,4 +8,5 @@
     <dimen name="toolbar_text_size">16sp</dimen>
     <dimen name="background_stroke_width">2dp</dimen>
     <dimen name="splash_text_size">16sp</dimen>
+    <dimen name="home_back_button_padding">5dp</dimen>
 </resources>

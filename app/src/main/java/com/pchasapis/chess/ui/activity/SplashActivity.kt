@@ -2,12 +2,14 @@ package com.pchasapis.chess.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.pchasapis.chess.databinding.ActivitySplashBinding
 import com.pchasapis.chess.mvp.presenter.splash.SplashPresenter
 import com.pchasapis.chess.mvp.presenter.splash.SplashPresenterImpl
 import com.pchasapis.chess.mvp.view.splash.SplashView
+
 
 class SplashActivity : AppCompatActivity(), SplashView {
 
@@ -23,11 +25,13 @@ class SplashActivity : AppCompatActivity(), SplashView {
     }
 
     override fun proceedToHome(maxMoves: String, boardSize: String) {
+//        val controller = view.windowInsetsController
+//        controller.hide(Type.ime())
+
         val intent = Intent(this, HomeActivity::class.java)
-        intent.putExtra(MAX_MOVE,maxMoves.toInt())
-        intent.putExtra(BOARD_SIZE,boardSize.toInt())
+        intent.putExtra(MAX_MOVE, maxMoves.toInt())
+        intent.putExtra(BOARD_SIZE, boardSize.toInt())
         startActivity(intent)
-        finish()
     }
 
     override fun showError(splashBoardError: Int) {
@@ -40,15 +44,25 @@ class SplashActivity : AppCompatActivity(), SplashView {
 
     private fun initLayout() {
         binding.startButton.setOnClickListener {
-            presenter.validateFields(
-                binding.boardSizeEditText.text?.toString() ?: "",
-                binding.moveEditText.text?.toString() ?: "")
+            checkFields()
+        }
 
+        binding.boardSizeEditText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                checkFields()
+                true
+            } else false
         }
     }
 
-    companion object{
-        const val MAX_MOVE= "maxMoves"
-        const val BOARD_SIZE= "boardSize"
+    private fun checkFields() {
+        presenter.validateFields(
+            binding.boardSizeEditText.text?.toString() ?: "",
+            binding.moveEditText.text?.toString() ?: "")
+    }
+
+    companion object {
+        const val MAX_MOVE = "maxMoves"
+        const val BOARD_SIZE = "boardSize"
     }
 }
